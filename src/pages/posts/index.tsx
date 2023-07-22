@@ -102,7 +102,12 @@ const PostPage = () => {
     renderRowActions: ({ row, table }) => (
       <Flex gap="md">
         <Tooltip withArrow position="left" label="編集">
-          <ActionIcon>
+          <ActionIcon
+            onClick={() => {
+              // eslint-disable-next-line @typescript-eslint/no-floating-promises
+              router.push(`/posts/${row.original.id}`);
+            }}
+          >
             <IconEdit />
           </ActionIcon>
         </Tooltip>

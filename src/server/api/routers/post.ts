@@ -3,7 +3,8 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { postSchema } from "~/pages/posts/new";
+import { postSchema as postCreateSchema } from "~/pages/posts/new";
+import { postSchema as postUpdateSchema } from "~/pages/posts/[id]";
 import { z } from "zod";
 import { MRT_ColumnFiltersState, MRT_SortingState } from "mantine-react-table";
 
@@ -52,14 +53,36 @@ export const postRouter = createTRPCRouter({
       },
     };
   }),
-  create: publicProcedure.input(postSchema).mutation(async ({ ctx, input }) => {
-    return await ctx.prisma.post.create({
-      data: {
-        title: input.title,
-        text: input.text,
+  byId: publicProcedure.input(z.string()).query(async ({ input, ctx }) => {
+    return await ctx.prisma.post.findUnique({
+      where: {
+        id: input,
       },
     });
   }),
+  create: publicProcedure
+    .input(postCreateSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.post.create({
+        data: {
+          title: input.title,
+          text: input.text,
+        },
+      });
+    }),
+  update: publicProcedure
+    .input(postUpdateSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.post.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          title: input.title,
+          text: input.text,
+        },
+      });
+    }),
   delete: publicProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
     return await ctx.prisma.post.delete({
       where: {
