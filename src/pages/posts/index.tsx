@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, type ReactElement } from "react";
 import { useRouter } from "next/router";
 import {
   MantineReactTable,
@@ -14,6 +14,8 @@ import { ActionIcon, Button, Flex, Group, Tooltip } from "@mantine/core";
 import { IconEdit, IconRefresh, IconTrash } from "@tabler/icons-react";
 import { Post } from "@prisma/client";
 import { api } from "~/utils/api";
+import { Layout } from "~/components/layout";
+import type { NextPageWithLayout } from "~/pages/_app";
 
 type PostApiResponse = {
   data: Array<Post>;
@@ -22,7 +24,7 @@ type PostApiResponse = {
   };
 };
 
-const PostPage = () => {
+const PostPage: NextPageWithLayout = () => {
   const router = useRouter();
   const columns = useMemo<MRT_ColumnDef<Post>[]>(
     () => [
@@ -154,6 +156,10 @@ const PostPage = () => {
   });
 
   return <MantineReactTable table={table} />;
+};
+
+PostPage.getLayout = function getLayout(page: ReactElement) {
+  return <Layout>{page}</Layout>;
 };
 
 export default PostPage;

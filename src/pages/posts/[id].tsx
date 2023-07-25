@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, type ReactElement } from "react";
 import NextError from "next/error";
 import {
   Container,
@@ -12,6 +12,8 @@ import {
 import { z } from "zod";
 import { useForm, zodResolver } from "@mantine/form";
 import { api } from "~/utils/api";
+import { Layout } from "~/components/layout";
+import type { NextPageWithLayout } from "~/pages/_app";
 
 export const postSchema = z.object({
   id: z.string(),
@@ -21,7 +23,7 @@ export const postSchema = z.object({
 
 export type Post = z.infer<typeof postSchema>;
 
-const PostUpdatePage = () => {
+const PostUpdatePage: NextPageWithLayout = () => {
   const router = useRouter();
   const id = router.query.id as string;
 
@@ -103,6 +105,10 @@ const PostUpdatePage = () => {
       </Paper>
     </Container>
   );
+};
+
+PostUpdatePage.getLayout = function getLayout(page: ReactElement) {
+  return <Layout>{page}</Layout>;
 };
 
 export default PostUpdatePage;

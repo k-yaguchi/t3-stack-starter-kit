@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import type { ReactElement } from "react";
 import {
   Container,
   Paper,
@@ -10,6 +11,8 @@ import {
 import { z } from "zod";
 import { useForm, zodResolver } from "@mantine/form";
 import { api } from "~/utils/api";
+import { Layout } from "~/components/layout";
+import type { NextPageWithLayout } from "~/pages/_app";
 
 export const postSchema = z.object({
   title: z.string().min(1, { message: "必須です" }),
@@ -18,7 +21,7 @@ export const postSchema = z.object({
 
 export type Post = z.infer<typeof postSchema>;
 
-const PostNewPage = () => {
+const PostNewPage: NextPageWithLayout = () => {
   const router = useRouter();
 
   const form = useForm({
@@ -67,6 +70,10 @@ const PostNewPage = () => {
       </Paper>
     </Container>
   );
+};
+
+PostNewPage.getLayout = function getLayout(page: ReactElement) {
+  return <Layout>{page}</Layout>;
 };
 
 export default PostNewPage;
