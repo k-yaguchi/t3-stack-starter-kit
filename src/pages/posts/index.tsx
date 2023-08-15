@@ -74,8 +74,7 @@ const PostPage: NextPageWithLayout = () => {
       if (!confirm(`「${row.original.title}」を削除してもよろしいですか？`)) {
         return;
       }
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      deleteRow(row.original.id);
+      void deleteRow(row.original.id);
     },
     [data]
   );
@@ -106,8 +105,7 @@ const PostPage: NextPageWithLayout = () => {
         <Tooltip withArrow position="left" label="編集">
           <ActionIcon
             onClick={() => {
-              // eslint-disable-next-line @typescript-eslint/no-floating-promises
-              router.push(`/posts/${row.original.id}`);
+              void router.push(`/posts/${row.original.id}`);
             }}
           >
             <IconEdit />
@@ -125,8 +123,7 @@ const PostPage: NextPageWithLayout = () => {
         <Tooltip label="データを更新">
           <ActionIcon
             onClick={() => {
-              // eslint-disable-next-line @typescript-eslint/no-floating-promises
-              refetch();
+              void refetch();
             }}
           >
             <IconRefresh />
@@ -135,8 +132,7 @@ const PostPage: NextPageWithLayout = () => {
         <Button
           color="teal"
           onClick={() => {
-            // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            router.push(`/posts/new`);
+            void router.push(`/posts/new`);
           }}
           variant="filled"
         >

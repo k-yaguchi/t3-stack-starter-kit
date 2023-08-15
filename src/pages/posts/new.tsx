@@ -36,8 +36,7 @@ const PostNewPage: NextPageWithLayout = () => {
 
   const handleSubmit = async (values: Post) => {
     await postCreateMutation.mutateAsync(values);
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    router.push(`/posts`);
+    void router.push(`/posts`);
   };
 
   return (
@@ -45,8 +44,7 @@ const PostNewPage: NextPageWithLayout = () => {
       <Paper p="md" m="md" shadow="md">
         <form
           onSubmit={form.onSubmit((values) => {
-            // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            handleSubmit(values);
+            void handleSubmit(values);
           })}
         >
           <TextInput
