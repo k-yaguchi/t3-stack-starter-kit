@@ -16,6 +16,8 @@ import { Post } from "@prisma/client";
 import { api } from "~/utils/api";
 import { Layout } from "~/components/layout";
 import type { NextPageWithLayout } from "~/pages/_app";
+import { getServerAuthSession } from "~/server/auth";
+import type { GetServerSideProps } from "next";
 
 type PostApiResponse = {
   data: Array<Post>;
@@ -156,6 +158,21 @@ const PostPage: NextPageWithLayout = () => {
 
 PostPage.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
+};
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: { session },
+  };
 };
 
 export default PostPage;

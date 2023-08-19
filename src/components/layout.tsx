@@ -1,14 +1,29 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { signOut, useSession } from "next-auth/react";
 import type { ReactNode } from "react";
-import { AppShell, Navbar, NavLink, Header, Text } from "@mantine/core";
-import { IconFileDescription, IconUsers } from "@tabler/icons-react";
+import {
+  AppShell,
+  Navbar,
+  NavLink,
+  Header,
+  Text,
+  Group,
+  ActionIcon,
+  Divider,
+} from "@mantine/core";
+import {
+  IconFileDescription,
+  IconUsers,
+  IconLogout,
+} from "@tabler/icons-react";
 
 interface Props {
   children: ReactNode;
 }
 export const Layout = ({ children }: Props) => {
   const router = useRouter();
+  const { data: session } = useSession();
   return (
     <AppShell
       padding="md"
@@ -36,6 +51,23 @@ export const Layout = ({ children }: Props) => {
               component={Link}
               href="#"
             />
+          </Navbar.Section>
+          <Navbar.Section>
+            <Divider my="sm" />
+            <Group position="apart" mx="sm">
+              <Text>{session?.user?.name ?? "ユーザー名無し"}</Text>
+              <ActionIcon
+                variant="default"
+                onClick={() => {
+                  if (!confirm(`ログアウトしますか？`)) {
+                    return;
+                  }
+                  void signOut();
+                }}
+              >
+                <IconLogout size="1rem" />
+              </ActionIcon>
+            </Group>
           </Navbar.Section>
         </Navbar>
       }

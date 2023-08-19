@@ -15,7 +15,7 @@ const paramSchema = z.object({
   sorting: z.string(),
 });
 export const postRouter = createTRPCRouter({
-  list: publicProcedure.input(paramSchema).query(async ({ input, ctx }) => {
+  list: protectedProcedure.input(paramSchema).query(async ({ input, ctx }) => {
     const { start, size, filters, sorting } = input as Record<string, string>;
 
     const parsedColumnFilters = JSON.parse(
@@ -53,14 +53,14 @@ export const postRouter = createTRPCRouter({
       },
     };
   }),
-  byId: publicProcedure.input(z.string()).query(async ({ input, ctx }) => {
+  byId: protectedProcedure.input(z.string()).query(async ({ input, ctx }) => {
     return await ctx.prisma.post.findUnique({
       where: {
         id: input,
       },
     });
   }),
-  create: publicProcedure
+  create: protectedProcedure
     .input(postCreateSchema)
     .mutation(async ({ ctx, input }) => {
       return await ctx.prisma.post.create({
@@ -70,7 +70,7 @@ export const postRouter = createTRPCRouter({
         },
       });
     }),
-  update: publicProcedure
+  update: protectedProcedure
     .input(postUpdateSchema)
     .mutation(async ({ ctx, input }) => {
       return await ctx.prisma.post.update({
@@ -83,11 +83,13 @@ export const postRouter = createTRPCRouter({
         },
       });
     }),
-  delete: publicProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
-    return await ctx.prisma.post.delete({
-      where: {
-        id: input,
-      },
-    });
-  }),
+  delete: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.post.delete({
+        where: {
+          id: input,
+        },
+      });
+    }),
 });
