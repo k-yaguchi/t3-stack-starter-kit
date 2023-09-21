@@ -46,10 +46,15 @@ export const postRouter = createTRPCRouter({
       take: parseInt(size ?? "10"),
       orderBy: orderByClause,
     });
+
+    const postCount = await ctx.prisma.post.count({
+      where: whereClause,
+    });
+
     return {
       data: posts,
       meta: {
-        totalRowCount: posts.length,
+        totalRowCount: postCount,
       },
     };
   }),
